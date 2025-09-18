@@ -11,7 +11,7 @@ db.sqlite3-journal
 .env
 
 # 미디어 파일
-media/
+#media/
 
 # 정적 파일
 staticfiles/
