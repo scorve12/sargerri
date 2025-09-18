@@ -1,6 +1,6 @@
 # rss/views.py
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, TemplateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -37,11 +37,60 @@ class CustomUserCreationForm(UserCreationForm):
             self.save_m2m()
         return user
 
+# 프로필 수정 폼
+class ProfileUpdateForm(forms.ModelForm):
+    interest_tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label='관심태그'
+    )
+    
+    class Meta:
+        model = CustomUser
+        fields = ['name', 'gender', 'age', 'interest_tags']
+        labels = {
+            'name': '이름',
+            'gender': '성별',
+            'age': '나이',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'gender': forms.Select(attrs={'class': 'form-select'}),
+            'age': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
 # 회원가입 뷰
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('rss:login')
     template_name = 'registration/signup.html'
+
+# 프로필 보기
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'rss/profile.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['user'] = user
+        context['user_posts'] = Post.objects.filter(author=user).order_by('-created_at')[:5]  # 최근 5개 게시물
+        context['total_posts'] = Post.objects.filter(author=user).count()
+        return context
+
+# 프로필 수정
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
+    form_class = ProfileUpdateForm
+    template_name = 'rss/profile_edit.html'
+    success_url = reverse_lazy('rss:profile')
+    
+    def get_object(self):
+        return self.request.user
+    
+    def form_valid(self, form):
+        messages.success(self.request, '프로필이 성공적으로 수정되었습니다!')
+        return super().form_valid(form)
 
 # 메인페이지 - 게시물 목록
 class PostListView(ListView):
