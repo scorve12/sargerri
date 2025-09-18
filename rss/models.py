@@ -1,4 +1,4 @@
-# blog/models.py
+# rss/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
@@ -59,4 +59,4 @@ class Post(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return reverse('post-detail', kwargs={'pk': self.pk})
+        return reverse('rss:post-detail', kwargs={'pk': self.pk})

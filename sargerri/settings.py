@@ -131,3 +131,15 @@ AUTH_USER_MODEL = 'rss.CustomUser'
 import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 로그인/로그아웃 리다이렉트 설정
+LOGIN_REDIRECT_URL = '/'  # 로그인 성공 후 메인페이지로
+LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 메인페이지로
+LOGIN_URL = '/login/'  # 로그인이 필요한 페이지 접근 시
+
+
+# settings.py 맨 아래에 추가
+AUTHENTICATION_BACKENDS = [
+    'rss.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
