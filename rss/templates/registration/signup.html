@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block title %}회원가입 - RSS 사이트{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">회원가입</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {% for field, errors in form.errors.items %}
+                                <strong>{{ field }}:</strong> {{ errors|join:", " }}<br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label">사용자명 *</label>
+                                <input type="text" class="form-control" name="{{ form.username.name }}" 
+                                       id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" required>
+                                <div class="form-text">{{ form.username.help_text }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">이메일 *</label>
+                                <input type="email" class="form-control" name="{{ form.email.name }}" 
+                                       id="{{ form.email.id_for_label }}" value="{{ form.email.value|default:'' }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">이름 *</label>
+                                <input type="text" class="form-control" name="{{ form.name.name }}" 
+                                       id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.gender.id_for_label }}" class="form-label">성별 *</label>
+                                <select class="form-select" name="{{ form.gender.name }}" id="{{ form.gender.id_for_label }}" required>
+                                    <option value="">선택하세요</option>
+                                    {% for value, label in form.gender.field.choices %}
+                                        <option value="{{ value }}" {% if form.gender.value == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.age.id_for_label }}" class="form-label">나이 *</label>
+                                <input type="number" class="form-control" name="{{ form.age.name }}" 
+                                       id="{{ form.age.id_for_label }}" value="{{ form.age.value|default:'' }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label">비밀번호 *</label>
+                        <input type="password" class="form-control" name="{{ form.password1.name }}" 
+                               id="{{ form.password1.id_for_label }}" required>
+                        <div class="form-text">{{ form.password1.help_text }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label">비밀번호 확인 *</label>
+                        <input type="password" class="form-control" name="{{ form.password2.name }}" 
+                               id="{{ form.password2.id_for_label }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">관심 태그</label>
+                        <div class="row">
+                            {% for checkbox in form.interest_tags %}
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                            {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="col-12">
+                                    <p class="text-muted">아직 태그가 없습니다.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100">회원가입</button>
+                </form>
+                
+                <hr>
+                <div class="text-center">
+                    <p>이미 계정이 있으신가요? <a href="{% url 'rss:login' %}">로그인</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}{% extends 'base.html' %}
+{% load form_tags %}
+
+{% block title %}회원가입 - RSS 사이트{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">회원가입</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {% for field, errors in form.errors.items %}
+                                <strong>{{ field }}:</strong> {{ errors|join:", " }}<br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label">사용자명 *</label>
+                                {{ form.username|add_class:"form-control" }}
+                                <div class="form-text">{{ form.username.help_text }}</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">이메일 *</label>
+                                {{ form.email|add_class:"form-control" }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">이름 *</label>
+                                {{ form.name|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.gender.id_for_label }}" class="form-label">성별 *</label>
+                                {{ form.gender|add_class:"form-select" }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.age.id_for_label }}" class="form-label">나이 *</label>
+                                {{ form.age|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label">비밀번호 *</label>
+                        {{ form.password1|add_class:"form-control" }}
+                        <div class="form-text">{{ form.password1.help_text }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label">비밀번호 확인 *</label>
+                        {{ form.password2|add_class:"form-control" }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">관심 태그</label>
+                        <div class="row">
+                            {% for checkbox in form.interest_tags %}
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                            {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="col-12">
+                                    <p class="text-muted">아직 태그가 없습니다.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100">회원가입</button>
+                </form>
+                
+                <hr>
+                <div class="text-center">
+                    <p>이미 계정이 있으신가요? <a href="{% url 'rss:login' %}">로그인</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
