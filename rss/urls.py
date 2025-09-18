@@ -17,4 +17,5 @@ urlpatterns = [
     # 게시물 관련
     path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
     path('post/new/', views.PostCreateView.as_view(), name='post-create'),
+    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
 ]

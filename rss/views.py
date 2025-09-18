@@ -1,9 +1,11 @@
 # rss/views.py
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
+from django.contrib import messages
+from django.http import Http404
 from django import forms
 from .models import Post, Tag, CustomUser
 
@@ -65,4 +67,23 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     
     def form_valid(self, form):
         form.instance.author = self.request.user
+        messages.success(self.request, '게시물이 성공적으로 작성되었습니다!')
         return super().form_valid(form)
+
+# 게시물 삭제
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = reverse_lazy('rss:home')
+    template_name = 'rss/post_confirm_delete.html'
+    context_object_name = 'post'
+    
+    def get_object(self, queryset=None):
+        """작성자만 삭제할 수 있도록 권한 체크"""
+        obj = super().get_object(queryset)
+        if obj.author != self.request.user:
+            raise Http404("삭제 권한이 없습니다.")
+        return obj
+    
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, '게시물이 성공적으로 삭제되었습니다.')
+        return super().delete(request, *args, **kwargs)

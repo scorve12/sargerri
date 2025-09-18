@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}게시물 삭제 - Sageori{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">⚠️ 게시물 삭제</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <strong>주의!</strong> 이 작업은 되돌릴 수 없습니다.
+                </div>
+                
+                <div class="mb-4">
+                    <h5>삭제할 게시물:</h5>
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ post.title }}</h6>
+                            <p class="card-text text-muted">{{ post.content|truncatewords:20 }}</p>
+                            <div class="mb-2">
+                                {% for tag in post.tags.all %}
+                                    <span class="badge bg-secondary me-1">#{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <small class="text-muted">
+                                작성일: {{ post.created_at|date:"Y-m-d H:i" }} | 
+                                기간: {{ post.start_date }} ~ {{ post.end_date }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-muted">정말로 이 게시물을 삭제하시겠습니까?</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'rss:post-detail' post.pk %}" class="btn btn-outline-secondary">
+                            <i>❌</i> 취소
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i>🗑️</i> 삭제하기
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
