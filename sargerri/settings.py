@@ -118,6 +118,11 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://port-0-sargerri-mcdbxgye995cf671.sel5.cloudtype.app',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
 
 # 커스텀 유저 모델 설정
 AUTH_USER_MODEL = 'rss.CustomUser'
